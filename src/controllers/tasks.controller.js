@@ -27,10 +27,8 @@ export const createTask = async (req, res) => {
 };
 export const getTask = (req, res) => {
   const task = getConnection().data.tasks.find(
-    (task) => task.id == req.params.id
+    (task) => task.id === req.params.id
   );
-
-  console.log(req.params.id);
 
   if (task === undefined) {
     res.status(404).json({
@@ -43,8 +41,26 @@ export const getTask = (req, res) => {
 export const updateTask = (req, res) => {
   res.send("updating task");
 };
-export const deleteTask = (req, res) => {
-  res.send("deleting task");
+export const deleteTask = async (req, res) => {
+  const db = getConnection()
+  const task = db.data.tasks.find(
+    (task) => task.id == req.params.id
+  );
+
+  if (task === undefined) {
+    res.status(404).json({
+      message: "No se encontraron coincidencias",
+    });
+  } else {
+    const newTasks = db.data.tasks.filter(
+      (task) => task.id !== req.params.id
+    );
+    db.data.tasks = newTasks
+
+    await db.write()
+    
+    res.json(task);
+  }
 };
 export const countTasks = (req, res) => {
   res.send("counting task");

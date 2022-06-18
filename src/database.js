@@ -16,7 +16,6 @@ export async function createConnection() {
   db.data ||= { tasks: [] };
 
   await db.write();
-  console.log(db);
 }
 
 export const getConnection = () => db;
