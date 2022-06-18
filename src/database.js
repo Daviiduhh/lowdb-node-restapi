@@ -9,14 +9,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export async function createConnection() {
   const file = join(__dirname, "../db.json");
   const adapter = new JSONFile(file);
-  const db = new Low(adapter);
+  db = new Low(adapter);
 
   await db.read();
 
-  db.data ||= { tasks: [] }; // Node >= 15.x
+  db.data ||= { tasks: [] };
 
   await db.write();
   console.log(db);
 }
 
-const getConnection = () => db;
+export const getConnection = () => db;
