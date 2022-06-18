@@ -2,7 +2,8 @@ import { v4 as uuid } from "uuid";
 import { getConnection } from "../database.js";
 
 export const getTasks = (req, res) => {
-  res.send("sending tasks from tasks.controller");
+  const tasks = getConnection().data.tasks;
+  res.json(tasks);
 };
 
 export const createTask = async (req, res) => {
@@ -20,12 +21,24 @@ export const createTask = async (req, res) => {
     res.json(newTask);
   } catch (error) {
     return res.status(500).send({
-        message: error.message
+      message: error.message,
     });
   }
 };
 export const getTask = (req, res) => {
-  res.send("gettin task");
+  const task = getConnection().data.tasks.find(
+    (task) => task.id == req.params.id
+  );
+
+  console.log(req.params.id);
+
+  if (task === undefined) {
+    res.status(404).json({
+      message: "No se encontraron coincidencias",
+    });
+  }
+
+  res.json(task);
 };
 export const updateTask = (req, res) => {
   res.send("updating task");
